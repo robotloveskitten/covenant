@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users
 
+  # User search for combobox
+  get "users/search", to: "users#search", as: :users_search
+
   # Task routes
   resources :tasks do
     member do

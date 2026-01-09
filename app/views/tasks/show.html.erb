@@ -44,17 +44,21 @@
         <!-- Main content area (2/3) -->
         <div class="flex-1 min-w-0">
           <!-- Task metadata -->
-          <div class="flex flex-wrap gap-4 mb-6 text-sm">
+          <div class="flex flex-wrap gap-4 mb-6 text-sm" data-controller="task-field" data-task-field-url-value="<%= task_path(@task) %>">
             <div class="flex items-center gap-2">
               <span class="text-base-content/50">Status</span>
               <span class="badge badge-sm <%= status_badge_class(@task.status) %>"><%= @task.status_label %></span>
             </div>
-            <% if @task.assignee %>
-              <div class="flex items-center gap-2">
-                <span class="text-base-content/50">Assignee</span>
+            <div class="flex items-center gap-2">
+              <span class="text-base-content/50">Assignee</span>
+              <% if user_signed_in? %>
+                <%= render partial: 'assignee_combobox', locals: { task: @task } %>
+              <% elsif @task.assignee %>
                 <span class="text-base-content"><%= @task.assignee.display_name %></span>
-              </div>
-            <% end %>
+              <% else %>
+                <span class="text-base-content/40">Unassigned</span>
+              <% end %>
+            </div>
             <% if @task.due_date %>
               <div class="flex items-center gap-2">
                 <span class="text-base-content/50">Due</span>

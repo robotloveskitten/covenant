@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs cat:*)",
+      "Bash(find:*)",
+      "Bash(bin/rails routes:*)",
+      "Bash(bin/rubocop:*)",
+      "Bash(yarn build:*)"
+    ]
+  }
+}

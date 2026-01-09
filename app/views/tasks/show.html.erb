@@ -44,10 +44,10 @@
         <!-- Main content area (2/3) -->
         <div class="flex-1 min-w-0">
           <!-- Task metadata -->
-          <div class="flex flex-wrap gap-4 mb-6 text-sm" data-controller="task-field" data-task-field-url-value="<%= task_path(@task) %>">
+          <div class="flex flex-col flex-wrap gap-2 mb-6 text-sm" data-controller="task-field" data-task-field-url-value="<%= task_path(@task) %>">
             <div class="flex items-center gap-2">
               <span class="text-base-content/50">Status</span>
-              <span class="badge badge-sm <%= status_badge_class(@task.status) %>"><%= @task.status_label %></span>
+              <span class="badge badge-sm badge-soft <%= status_badge_class(@task.status) %>"><%= @task.status_label %></span>
             </div>
             <div class="flex items-center gap-2">
               <span class="text-base-content/50">Assignee</span>
@@ -59,20 +59,28 @@
                 <span class="text-base-content/40">Unassigned</span>
               <% end %>
             </div>
-            <% if @task.due_date %>
-              <div class="flex items-center gap-2">
-                <span class="text-base-content/50">Due</span>
-                <span class="text-base-content"><%= @task.due_date.strftime("%B %d, %Y") %></span>
-              </div>
-            <% end %>
-            <% if @task.tags.any? %>
-              <div class="flex items-center gap-2">
-                <span class="text-base-content/50">Tags</span>
+            <%# Due date %>
+            <div class="flex items-center gap-2">
+              <% if @task.due_date %>
+                <div class="flex items-center gap-2">
+                  <span class="text-base-content/50">Due</span>
+                  <span class="text-base-content"><%= @task.due_date.strftime("%B %d, %Y") %></span>
+                </div>
+              <% end %>
+            </div>
+            <%# Tags %>
+            <div class="flex items-center gap-2">
+              <span class="text-base-content/50">Tags</span>
+              <% if user_signed_in? %>
+                <%= render partial: 'tag_combobox', locals: { task: @task } %>
+              <% elsif @task.tags.any? %>
                 <% @task.tags.each do |tag| %>
                   <span class="badge badge-sm" style="background-color: <%= tag.color %>20; color: <%= tag.color %>"><%= tag.name %></span>
                 <% end %>
-              </div>
-            <% end %>
+              <% else %>
+                <span class="text-base-content/40">No tags</span>
+              <% end %>
+            </div>
           </div>
 
           <!-- Content -->

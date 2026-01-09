@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   # User search for combobox
   get "users/search", to: "users#search", as: :users_search
 
+  # Tag routes for combobox
+  get "tags/search", to: "tags#search", as: :tags_search
+  resources :tags, only: [:create, :update, :destroy]
+
   # Task routes
   resources :tasks do
     member do

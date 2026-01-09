@@ -22,7 +22,10 @@ export default class extends Controller {
 
   initEditor() {
     const content = this.editorTarget.innerHTML.trim()
-    
+
+    // Clear the element before Tiptap initializes to prevent duplicate content
+    this.editorTarget.innerHTML = ""
+
     this.editor = new Editor({
       element: this.editorTarget,
       extensions: [

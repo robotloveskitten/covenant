@@ -10,6 +10,10 @@ class Tag < ApplicationRecord
 
   before_validation :set_default_color
 
+  def deletable?
+    tasks.count <= 1
+  end
+
   private
 
   def set_default_color

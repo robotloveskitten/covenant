@@ -1,0 +1,24 @@
+<aside class="w-80 shrink-0">
+  <div role="tablist" class="tabs tabs-bordered w-full">
+    <input type="radio" name="sidebar_tabs" role="tab" class="tab" aria-label="Comments" checked="checked" />
+    <div role="tabpanel" class="tab-content border-base-300 bg-base-100 p-4">
+      <div class="bg-base-200/30 rounded-lg p-4 text-sm text-base-content/50">
+        Comments coming soon...
+      </div>
+    </div>
+
+    <input type="radio" name="sidebar_tabs" role="tab" class="tab" aria-label="Files" />
+    <div role="tabpanel" class="tab-content border-base-300 bg-base-100 p-4">
+      <div class="bg-base-200/30 rounded-lg p-4 text-sm text-base-content/50">
+        File attachments coming soon...
+      </div>
+    </div>
+
+    <input type="radio" name="sidebar_tabs" role="tab" class="tab" aria-label="History" />
+    <div role="tabpanel" class="tab-content border-base-300 bg-base-100 p-4">
+      <%= link_to task_versions_path(task), class: "text-sm text-primary hover:underline" do %>
+        View version history (<%= task.versions.count %>)
+      <% end %>
+    </div>
+  </div>
+</aside>

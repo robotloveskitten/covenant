@@ -2,15 +2,30 @@ module TasksHelper
   def task_type_color(task_type)
     case task_type
     when 'strategy'
-      'bg-purple-500'
+      'badge-accent'
     when 'initiative'
-      'bg-blue-500'
+      'badge-primary'
     when 'epic'
-      'bg-teal-500'
+      'badge-secondary'
     when 'task'
-      'bg-gray-400'
+      'badge-neutral'
     else
-      'bg-gray-300'
+      'badge-neutral'
+    end
+  end
+
+  def task_type_bg_color(task_type)
+    case task_type
+    when 'strategy'
+      'bg-accent'
+    when 'initiative'
+      'bg-primary'
+    when 'epic'
+      'bg-secondary'
+    when 'task'
+      'bg-neutral'
+    else
+      'bg-neutral'
     end
   end
 

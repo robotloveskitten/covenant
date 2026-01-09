@@ -7,8 +7,8 @@
       
       <div class="flex items-center justify-between mt-2">
         <div class="flex items-center gap-3">
-          <span class="badge badge-sm badge-outline <%= task_type_color(@task.task_type) %>"><%= @task.task_type.capitalize %></span>
-          <h1 class="text-xl font-semibold text-base-content"><%= @task.title %></h1>
+          <span class="badge badge-soft badge-sm <%= task_type_color(@task.task_type) %>"><%= @task.task_type.capitalize %></span>
+          <h1 class="text-2xl font-semibold text-base-content"><%= @task.title %></h1>
         </div>
         
         <div class="flex items-center gap-2">
@@ -109,31 +109,7 @@
         </div>
 
         <!-- Sidebar (1/3) -->
-        <aside class="w-80 shrink-0">
-          <!-- Comments placeholder -->
-          <div class="mb-6">
-            <h3 class="text-sm font-medium text-base-content/70 mb-3">Comments</h3>
-            <div class="bg-base-200/30 rounded-lg p-4 text-sm text-base-content/50">
-              Comments coming soon...
-            </div>
-          </div>
-
-          <!-- Files placeholder -->
-          <div class="mb-6">
-            <h3 class="text-sm font-medium text-base-content/70 mb-3">Files</h3>
-            <div class="bg-base-200/30 rounded-lg p-4 text-sm text-base-content/50">
-              File attachments coming soon...
-            </div>
-          </div>
-
-          <!-- Version history link -->
-          <div>
-            <h3 class="text-sm font-medium text-base-content/70 mb-3">History</h3>
-            <%= link_to task_versions_path(@task), class: "text-sm text-primary hover:underline" do %>
-              View version history (<%= @task.versions.count %>)
-            <% end %>
-          </div>
-        </aside>
+        <%= render partial: 'sidebar', locals: { task: @task } %>
       </div>
     </main>
   </div>

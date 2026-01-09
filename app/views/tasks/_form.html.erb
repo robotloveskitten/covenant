@@ -1,0 +1,104 @@
+<%= form_with model: task, class: "space-y-6" do |f| %>
+  <% if task.errors.any? %>
+    <div class="alert alert-error">
+      <ul class="list-disc list-inside">
+        <% task.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.hidden_field :parent_id %>
+
+  <div class="form-control">
+    <%= f.label :title, class: "label" do %>
+      <span class="label-text">Title</span>
+    <% end %>
+    <%= f.text_field :title, class: "input input-bordered w-full", placeholder: "Task title", autofocus: true %>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div class="form-control">
+      <%= f.label :task_type, class: "label" do %>
+        <span class="label-text">Type</span>
+      <% end %>
+      <%= f.select :task_type, Task::TASK_TYPES.map { |t| [t.capitalize, t] }, {}, class: "select select-bordered w-full" %>
+    </div>
+
+    <div class="form-control">
+      <%= f.label :status, class: "label" do %>
+        <span class="label-text">Status</span>
+      <% end %>
+      <%= f.select :status, Task::STATUSES.map { |s| [Task::STATUS_LABELS[s], s] }, {}, class: "select select-bordered w-full" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div class="form-control">
+      <%= f.label :due_date, class: "label" do %>
+        <span class="label-text">Due Date</span>
+      <% end %>
+      <%= f.date_field :due_date, class: "input input-bordered w-full" %>
+    </div>
+
+    <div class="form-control">
+      <%= f.label :assignee_id, class: "label" do %>
+        <span class="label-text">Assignee</span>
+      <% end %>
+      <%= f.collection_select :assignee_id, User.all, :id, :display_name, { include_blank: "Unassigned" }, class: "select select-bordered w-full" %>
+    </div>
+  </div>
+
+  <div class="form-control">
+    <%= f.label :default_view, class: "label" do %>
+      <span class="label-text">Default View</span>
+    <% end %>
+    <div class="flex gap-4">
+      <label class="label cursor-pointer gap-2">
+        <%= f.radio_button :default_view, 'document', class: "radio radio-sm" %>
+        <span class="label-text">Document</span>
+      </label>
+      <label class="label cursor-pointer gap-2">
+        <%= f.radio_button :default_view, 'kanban', class: "radio radio-sm" %>
+        <span class="label-text">Kanban</span>
+      </label>
+    </div>
+    <span class="label-text-alt text-base-content/50">Choose how this task displays by default</span>
+  </div>
+
+  <% if Tag.any? %>
+    <div class="form-control">
+      <%= f.label :tag_ids, class: "label" do %>
+        <span class="label-text">Tags</span>
+      <% end %>
+      <div class="flex flex-wrap gap-2">
+        <% Tag.all.each do |tag| %>
+          <label class="cursor-pointer">
+            <%= check_box_tag "task[tag_ids][]", tag.id, task.tag_ids.include?(tag.id), class: "hidden peer" %>
+            <span class="badge badge-lg peer-checked:ring-2 ring-offset-2 transition-all" style="background-color: <%= tag.color %>20; color: <%= tag.color %>">
+              <%= tag.name %>
+            </span>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="flex justify-between pt-6 border-t border-base-200">
+    <% if task.persisted? %>
+      <%= link_to "Delete", task_path(task), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-ghost btn-error" %>
+    <% else %>
+      <div></div>
+    <% end %>
+    
+    <div class="flex gap-2">
+      <% if task.persisted? %>
+        <%= link_to "Cancel", task_path(task), class: "btn btn-ghost" %>
+      <% else %>
+        <%= link_to "Cancel", task.parent ? task_path(task.parent) : tasks_path, class: "btn btn-ghost" %>
+      <% end %>
+      <%= f.submit task.persisted? ? "Save Changes" : "Create Task", class: "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

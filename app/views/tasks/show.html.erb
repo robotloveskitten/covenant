@@ -1,0 +1,147 @@
+<div class="min-h-screen" data-controller="view-toggle">
+  <!-- Header -->
+  <header class="border-b border-base-200 bg-base-100 sticky top-0 z-10">
+    <div class="max-w-6xl mx-auto px-6 py-3">
+      <!-- Breadcrumb -->
+      <%= render partial: 'breadcrumb', locals: { task: @task } %>
+      
+      <div class="flex items-center justify-between mt-2">
+        <div class="flex items-center gap-3">
+          <span class="badge badge-sm badge-outline <%= task_type_color(task.task_type) %>"><%= @task.task_type.capitalize %></span>
+          <h1 class="text-xl font-semibold text-base-content"><%= @task.title %></h1>
+        </div>
+        
+        <div class="flex items-center gap-2">
+          <!-- View toggle -->
+          <div class="join">
+            <button class="join-item btn btn-sm" 
+                    data-view-toggle-target="documentBtn"
+                    data-action="click->view-toggle#showDocument"
+                    data-active-class="btn-active">
+              Document
+            </button>
+            <button class="join-item btn btn-sm"
+                    data-view-toggle-target="kanbanBtn"
+                    data-action="click->view-toggle#showKanban">
+              Kanban
+            </button>
+          </div>
+          
+          <% if user_signed_in? %>
+            <%= link_to edit_task_path(@task), class: "btn btn-sm btn-ghost" do %>
+              Edit
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Document View -->
+  <div data-view-toggle-target="documentView">
+    <main class="max-w-6xl mx-auto px-6 py-6">
+      <div class="flex gap-8">
+        <!-- Main content area (2/3) -->
+        <div class="flex-1 min-w-0">
+          <!-- Task metadata -->
+          <div class="flex flex-wrap gap-4 mb-6 text-sm">
+            <div class="flex items-center gap-2">
+              <span class="text-base-content/50">Status</span>
+              <span class="badge badge-sm <%= status_badge_class(@task.status) %>"><%= @task.status_label %></span>
+            </div>
+            <% if @task.assignee %>
+              <div class="flex items-center gap-2">
+                <span class="text-base-content/50">Assignee</span>
+                <span class="text-base-content"><%= @task.assignee.display_name %></span>
+              </div>
+            <% end %>
+            <% if @task.due_date %>
+              <div class="flex items-center gap-2">
+                <span class="text-base-content/50">Due</span>
+                <span class="text-base-content"><%= @task.due_date.strftime("%B %d, %Y") %></span>
+              </div>
+            <% end %>
+            <% if @task.tags.any? %>
+              <div class="flex items-center gap-2">
+                <span class="text-base-content/50">Tags</span>
+                <% @task.tags.each do |tag| %>
+                  <span class="badge badge-sm" style="background-color: <%= tag.color %>20; color: <%= tag.color %>"><%= tag.name %></span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+
+          <!-- Content -->
+          <div class="prose prose-sm max-w-none" data-controller="tiptap" data-tiptap-editable-value="<%= user_signed_in? %>" data-tiptap-task-id-value="<%= @task.id %>">
+            <div data-tiptap-target="editor" class="min-h-[200px] focus:outline-none">
+              <% if @task.content.present? %>
+                <%= raw @task.content %>
+              <% else %>
+                <p class="text-base-content/40">Click to add content...</p>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Children list -->
+          <% if @children.any? %>
+            <div class="mt-8 pt-8 border-t border-base-200">
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="text-sm font-medium text-base-content/70">Sub-items</h3>
+                <% if user_signed_in? && @task.allowed_child_types.any? %>
+                  <%= link_to new_task_path(parent_id: @task.id, task_type: @task.allowed_child_types.first), class: "btn btn-xs btn-ghost" do %>
+                    + Add
+                  <% end %>
+                <% end %>
+              </div>
+              <div class="space-y-1">
+                <% @children.each do |child| %>
+                  <%= render partial: 'task_list_item', locals: { task: child } %>
+                <% end %>
+              </div>
+            </div>
+          <% elsif user_signed_in? && @task.allowed_child_types.any? %>
+            <div class="mt-8 pt-8 border-t border-base-200">
+              <%= link_to new_task_path(parent_id: @task.id, task_type: @task.allowed_child_types.first), class: "text-sm text-base-content/40 hover:text-base-content" do %>
+                + Add sub-item
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Sidebar (1/3) -->
+        <aside class="w-80 shrink-0">
+          <!-- Comments placeholder -->
+          <div class="mb-6">
+            <h3 class="text-sm font-medium text-base-content/70 mb-3">Comments</h3>
+            <div class="bg-base-200/30 rounded-lg p-4 text-sm text-base-content/50">
+              Comments coming soon...
+            </div>
+          </div>
+
+          <!-- Files placeholder -->
+          <div class="mb-6">
+            <h3 class="text-sm font-medium text-base-content/70 mb-3">Files</h3>
+            <div class="bg-base-200/30 rounded-lg p-4 text-sm text-base-content/50">
+              File attachments coming soon...
+            </div>
+          </div>
+
+          <!-- Version history link -->
+          <div>
+            <h3 class="text-sm font-medium text-base-content/70 mb-3">History</h3>
+            <%= link_to task_versions_path(@task), class: "text-sm text-primary hover:underline" do %>
+              View version history (<%= @task.versions.count %>)
+            <% end %>
+          </div>
+        </aside>
+      </div>
+    </main>
+  </div>
+
+  <!-- Kanban View -->
+  <div data-view-toggle-target="kanbanView" class="hidden">
+    <main class="max-w-6xl mx-auto px-6 py-6">
+      <%= render partial: 'kanban_board', locals: { task: @task, children: @children } %>
+    </main>
+  </div>
+</div>

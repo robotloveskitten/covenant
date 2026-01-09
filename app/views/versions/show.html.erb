@@ -1,0 +1,48 @@
+<div class="min-h-screen">
+  <header class="border-b border-base-200 bg-base-100">
+    <div class="max-w-3xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div>
+          <nav class="text-sm text-base-content/50 mb-1">
+            <%= link_to @task.title, task_path(@task), class: "hover:text-base-content" %>
+            <span>/</span>
+            <%= link_to "Version History", task_versions_path(@task), class: "hover:text-base-content" %>
+            <span>/</span>
+            <span class="text-base-content">Version <%= @version.version_number %></span>
+          </nav>
+          <h1 class="text-xl font-semibold text-base-content">Version <%= @version.version_number %></h1>
+        </div>
+        <div class="flex items-center gap-2">
+          <%= button_to "Restore this version", restore_task_version_path(@task, @version),
+              method: :post,
+              data: { turbo_confirm: "Are you sure you want to restore this version?" },
+              class: "btn btn-sm btn-primary" %>
+          <%= link_to task_versions_path(@task), class: "btn btn-sm btn-ghost" do %>
+            Back
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-6 py-8">
+    <div class="mb-6 text-sm text-base-content/50">
+      Saved on <%= @version.created_at.strftime("%B %d, %Y at %I:%M %p") %>
+      <% if @version.user %>
+        by <%= @version.user.display_name %>
+      <% end %>
+    </div>
+
+    <div class="border border-base-200 rounded-lg p-6">
+      <h2 class="text-lg font-semibold text-base-content mb-4"><%= @version.title %></h2>
+      
+      <% if @version.content.present? %>
+        <div class="prose prose-sm max-w-none">
+          <%= raw @version.content %>
+        </div>
+      <% else %>
+        <p class="text-base-content/50 italic">No content</p>
+      <% end %>
+    </div>
+  </main>
+</div>

@@ -68,3 +68,7 @@ group :test do
 end
 
 gem "view_component", "~> 4.1"
+
+gem "devise", "~> 4.9"
+
+gem "jsbundling-rails", "~> 1.3"

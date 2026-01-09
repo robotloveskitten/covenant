@@ -1,0 +1,25 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  content: MyText
+  task_type: MyString
+  status: MyString
+  default_view: MyString
+  due_date: 2026-01-08
+  position: 1
+  parent: one
+  assignee: one
+  creator: one
+
+two:
+  title: MyString
+  content: MyText
+  task_type: MyString
+  status: MyString
+  default_view: MyString
+  due_date: 2026-01-08
+  position: 1
+  parent: two
+  assignee: two
+  creator: two

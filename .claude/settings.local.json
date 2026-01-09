@@ -5,7 +5,9 @@
       "Bash(find:*)",
       "Bash(bin/rails routes:*)",
       "Bash(bin/rubocop:*)",
-      "Bash(yarn build:*)"
+      "Bash(yarn build:*)",
+      "Bash(yarn add:*)",
+      "Bash(bin/rails test:*)"
     ]
   }
 }

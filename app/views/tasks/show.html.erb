@@ -84,8 +84,11 @@
           </div>
 
           <!-- Content -->
-          <div class="prose prose-sm max-w-none" data-controller="tiptap" data-tiptap-editable-value="<%= user_signed_in? %>" data-tiptap-task-id-value="<%= @task.id %>">
-            <div data-tiptap-target="editor" class="min-h-[200px] focus:outline-none">
+          <div class="border border-base-200 rounded-lg overflow-hidden" data-controller="tiptap" data-tiptap-editable-value="<%= user_signed_in? %>" data-tiptap-task-id-value="<%= @task.id %>">
+            <% if user_signed_in? %>
+              <%= render 'tiptap_toolbar' %>
+            <% end %>
+            <div data-tiptap-target="editor" class="prose prose-sm max-w-none p-4 min-h-[200px] focus:outline-none">
               <% if @task.content.present? %>
                 <%= raw @task.content %>
               <% else %>

@@ -319,8 +319,12 @@ export function createSlashCommandsRenderer() {
         event.preventDefault()
         const selectedItem = items[selectedIndex]
         if (selectedItem && currentProps) {
-          // Call the command with the selected item as props
-          currentProps.command(selectedItem)
+          // Call the command with full props object including editor and range
+          currentProps.command({ 
+            editor: currentProps.editor, 
+            range: currentProps.range, 
+            props: selectedItem 
+          })
         }
         return true
       }
@@ -354,7 +358,12 @@ function addClickHandlers(popup, items, props) {
       e.stopPropagation()
       const selectedItem = items[index]
       if (selectedItem && props) {
-        props.command(selectedItem)
+        // Call the command with full props object including editor and range
+        props.command({ 
+          editor: props.editor, 
+          range: props.range, 
+          props: selectedItem 
+        })
       }
     })
   })

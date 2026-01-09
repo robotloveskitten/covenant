@@ -11,11 +11,15 @@ import TaskItem from "@tiptap/extension-task-item"
 import { Color } from "@tiptap/extension-color"
 import Highlight from "@tiptap/extension-highlight"
 import { TextStyle } from "@tiptap/extension-text-style"
+import BubbleMenu from "@tiptap/extension-bubble-menu"
+import GlobalDragHandle from "tiptap-extension-global-drag-handle"
+import { SlashCommands, slashCommandItems, filterSlashItems, createSlashCommandsRenderer } from "../extensions/slash_commands"
 
 export default class extends Controller {
   static targets = [
     "editor",
     "toolbar",
+    "bubbleMenu",
     "headingLabel",
     "boldBtn",
     "italicBtn",
@@ -54,42 +58,86 @@ export default class extends Controller {
     // Clear the element before Tiptap initializes to prevent duplicate content
     this.editorTarget.innerHTML = ""
 
+    // Build extensions array
+    const extensions = [
+      StarterKit.configure({
+        heading: {
+          levels: [1, 2, 3]
+        }
+      }),
+      Placeholder.configure({
+        placeholder: 'Type "/" for commands...'
+      }),
+      Underline,
+      Link.configure({
+        openOnClick: false,
+        HTMLAttributes: {
+          class: "text-primary underline"
+        }
+      }),
+      Image.configure({
+        HTMLAttributes: {
+          class: "rounded-lg max-w-full"
+        }
+      }),
+      TextAlign.configure({
+        types: ["heading", "paragraph"]
+      }),
+      TaskList,
+      TaskItem.configure({
+        nested: true
+      }),
+      TextStyle,
+      Color,
+      Highlight.configure({
+        multicolor: true
+      })
+    ]
+
+    // Add editable-only features
+    if (this.editableValue) {
+      // Bubble menu (floating toolbar on selection)
+      if (this.hasBubbleMenuTarget) {
+        extensions.push(
+          BubbleMenu.configure({
+            element: this.bubbleMenuTarget,
+            updateDelay: 100,
+            shouldShow: ({ editor, from, to }) => {
+              // Show on non-empty selection, except for images
+              const hasSelection = from !== to
+              const notImage = !editor.isActive("image")
+              return hasSelection && notImage
+            }
+          })
+        )
+      }
+
+      // Global drag handle for block reordering
+      extensions.push(
+        GlobalDragHandle.configure({
+          dragHandleWidth: 20,
+          scrollTreshold: 100
+        })
+      )
+
+      // Slash commands
+      extensions.push(
+        SlashCommands.configure({
+          suggestion: {
+            char: "/",
+            items: ({ query }) => filterSlashItems(query),
+            render: createSlashCommandsRenderer,
+            command: ({ editor, range, props }) => {
+              props.command({ editor, range })
+            }
+          }
+        })
+      )
+    }
+
     this.editor = new Editor({
       element: this.editorTarget,
-      extensions: [
-        StarterKit.configure({
-          heading: {
-            levels: [1, 2, 3]
-          }
-        }),
-        Placeholder.configure({
-          placeholder: "Start writing..."
-        }),
-        Underline,
-        Link.configure({
-          openOnClick: false,
-          HTMLAttributes: {
-            class: "text-primary underline"
-          }
-        }),
-        Image.configure({
-          HTMLAttributes: {
-            class: "rounded-lg max-w-full"
-          }
-        }),
-        TextAlign.configure({
-          types: ["heading", "paragraph"]
-        }),
-        TaskList,
-        TaskItem.configure({
-          nested: true
-        }),
-        TextStyle,
-        Color,
-        Highlight.configure({
-          multicolor: true
-        })
-      ],
+      extensions,
       content: content === "<p class=\"text-base-content/40\">Click to add content...</p>" ? "" : content,
       editable: this.editableValue,
       editorProps: {

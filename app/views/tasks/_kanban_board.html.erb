@@ -14,6 +14,7 @@
            data-kanban-target="column"
            data-status="<%= status %>">
         <div class="flex items-center justify-between mb-3">
+        
           <h4 class="text-sm font-medium text-base-content/70"><%= Task::STATUS_LABELS[status] %></h4>
           <span class="text-xs text-base-content/40"><%= children.by_status(status).count %></span>
         </div>

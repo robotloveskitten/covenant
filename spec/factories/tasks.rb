@@ -6,6 +6,7 @@ FactoryBot.define do
     status { "not_started" }
     default_view { "document" }
     position { 1 }
+    organization
     association :creator, factory: :user
 
     trait :strategy do

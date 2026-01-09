@@ -1,0 +1,156 @@
+<div class="min-h-screen bg-base-100">
+  <!-- Header -->
+  <header class="border-b border-base-200 bg-base-100">
+    <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <%= link_to settings_path, class: "text-base-content/60 hover:text-base-content" do %>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
+        <% end %>
+        <h1 class="text-xl font-medium text-base-content">Organization Settings</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-6 py-8">
+    <div class="space-y-8">
+      <!-- Organization Details -->
+      <section>
+        <h2 class="text-lg font-medium text-base-content mb-4">Organization Details</h2>
+
+        <%= form_with model: @organization, url: organization_path, method: :patch, html: { class: "card bg-base-100 border border-base-200" } do |f| %>
+          <div class="card-body space-y-4">
+            <% if @organization.errors.any? %>
+              <div class="alert alert-error">
+                <ul class="list-disc list-inside text-sm">
+                  <% @organization.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="form-control">
+              <%= f.label :name, class: "label" %>
+              <%= f.text_field :name, class: "input input-bordered w-full max-w-md", placeholder: "Organization name" %>
+            </div>
+
+            <div class="pt-2">
+              <%= f.submit "Save changes", class: "btn btn-primary" %>
+            </div>
+          </div>
+        <% end %>
+      </section>
+
+      <!-- Team Members -->
+      <section>
+        <h2 class="text-lg font-medium text-base-content mb-4">Team Members</h2>
+        <div class="card bg-base-100 border border-base-200">
+          <div class="card-body p-0">
+            <div class="overflow-x-auto">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Joined</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @members.each do |membership| %>
+                    <tr>
+                      <td class="font-medium"><%= membership.user.display_name %></td>
+                      <td class="text-base-content/70"><%= membership.user.email %></td>
+                      <td>
+                        <span class="badge <%= membership.admin? ? 'badge-primary' : 'badge-ghost' %>">
+                          <%= membership.role.capitalize %>
+                        </span>
+                      </td>
+                      <td class="text-base-content/70"><%= membership.created_at.strftime("%b %d, %Y") %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Pending Invitations -->
+      <section>
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-medium text-base-content">Pending Invitations</h2>
+        </div>
+
+        <!-- Invite Form -->
+        <div class="card bg-base-100 border border-base-200 mb-4">
+          <div class="card-body">
+            <h3 class="font-medium mb-4">Invite a teammate</h3>
+            <%= form_with url: organization_invitations_path, method: :post, html: { class: "flex flex-wrap gap-3 items-end" } do |f| %>
+              <div class="form-control flex-1 min-w-[200px]">
+                <%= f.label :email, class: "label" %>
+                <%= f.email_field :email, class: "input input-bordered w-full", placeholder: "teammate@example.com", required: true %>
+              </div>
+              <div class="form-control">
+                <%= f.label :role, class: "label" %>
+                <%= f.select :role, [["Member", "member"], ["Admin", "admin"]], {}, class: "select select-bordered" %>
+              </div>
+              <%= f.submit "Send Invitation", class: "btn btn-primary" %>
+            <% end %>
+          </div>
+        </div>
+
+        <% if @invitations.any? %>
+          <div class="card bg-base-100 border border-base-200">
+            <div class="card-body p-0">
+              <div class="overflow-x-auto">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Invited</th>
+                      <th>Status</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% @invitations.each do |invitation| %>
+                      <tr>
+                        <td class="font-medium"><%= invitation.email %></td>
+                        <td>
+                          <span class="badge <%= invitation.role == 'admin' ? 'badge-primary' : 'badge-ghost' %>">
+                            <%= invitation.role.capitalize %>
+                          </span>
+                        </td>
+                        <td class="text-base-content/70"><%= time_ago_in_words(invitation.created_at) %> ago</td>
+                        <td>
+                          <% if invitation.expired? %>
+                            <span class="badge badge-error badge-sm">Expired</span>
+                          <% else %>
+                            <span class="badge badge-warning badge-sm">Pending</span>
+                          <% end %>
+                        </td>
+                        <td>
+                          <%= button_to organization_invitation_path(invitation), method: :delete, class: "btn btn-ghost btn-xs text-error", data: { turbo_confirm: "Cancel this invitation?" } do %>
+                            Cancel
+                          <% end %>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        <% else %>
+          <div class="text-center py-8 text-base-content/50">
+            <p>No pending invitations</p>
+          </div>
+        <% end %>
+      </section>
+    </div>
+  </main>
+</div>

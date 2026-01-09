@@ -1,8 +1,10 @@
 class Tag < ApplicationRecord
+  belongs_to :organization, optional: true
+
   has_many :task_tags, dependent: :destroy
   has_many :tasks, through: :task_tags
 
-  validates :name, presence: true, uniqueness: true
+  validates :name, presence: true, uniqueness: { scope: :organization_id }
   validates :color, format: { with: /\A#[0-9A-Fa-f]{6}\z/, allow_blank: true }
 
   # Default colors for tags

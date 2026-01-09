@@ -1,23 +1,19 @@
 class TagsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_tag, only: [ :update, :destroy ]
+  before_action :set_tag, only: [:update, :destroy]
 
   def search
     query = params[:q].to_s.strip
 
-    tags = if query.present?
-      Tag.where("name LIKE ?", "%#{query}%")
-    else
-      Tag.all
-    end
-
+    tags = organization_tags
+    tags = tags.where("name LIKE ?", "%#{query}%") if query.present?
     tags = tags.order(:name).limit(20)
 
     render json: tags.map { |t| { id: t.id, name: t.name, color: t.color } }
   end
 
   def create
-    tag = Tag.new(tag_params)
+    tag = organization_tags.new(tag_params)
 
     if tag.save
       render json: { id: tag.id, name: tag.name, color: tag.color }, status: :created
@@ -46,7 +42,15 @@ class TagsController < ApplicationController
   private
 
   def set_tag
-    @tag = Tag.find(params[:id])
+    @tag = organization_tags.find(params[:id])
+  end
+
+  def organization_tags
+    if current_organization
+      current_organization.tags
+    else
+      Tag.none
+    end
   end
 
   def tag_params

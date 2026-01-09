@@ -3,7 +3,7 @@ class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy, :kanban, :reorder_children]
 
   def index
-    @tasks = Task.root_tasks.ordered.includes(:assignee, :tags, :children)
+    @tasks = organization_tasks.root_tasks.ordered.includes(:assignee, :tags, :children)
   end
 
   def show
@@ -16,17 +16,17 @@ class TasksController < ApplicationController
   end
 
   def new
-    @task = Task.new(parent_id: params[:parent_id])
+    @task = organization_tasks.new(parent_id: params[:parent_id])
     @task.task_type = params[:task_type] if params[:task_type].present?
     @task.creator = current_user
   end
 
   def create
-    @task = Task.new(task_params)
+    @task = organization_tasks.new(task_params)
     @task.creator = current_user
 
     if @task.save
-      redirect_to @task, notice: 'Task was successfully created.'
+      redirect_to @task, notice: "Task was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -68,7 +68,15 @@ class TasksController < ApplicationController
   private
 
   def set_task
-    @task = Task.find(params[:id])
+    @task = organization_tasks.find(params[:id])
+  end
+
+  def organization_tasks
+    if current_organization
+      current_organization.tasks
+    else
+      Task.none
+    end
   end
 
   def task_params

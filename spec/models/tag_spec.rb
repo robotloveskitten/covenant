@@ -13,11 +13,20 @@ RSpec.describe Tag, type: :model do
       expect(tag.errors[:name]).to include("can't be blank")
     end
 
-    it 'requires a unique name' do
-      create(:tag, name: 'urgent')
-      tag = build(:tag, name: 'urgent')
+    it 'requires a unique name within an organization' do
+      organization = create(:organization)
+      create(:tag, name: 'urgent', organization: organization)
+      tag = build(:tag, name: 'urgent', organization: organization)
       expect(tag).not_to be_valid
       expect(tag.errors[:name]).to include('has already been taken')
+    end
+
+    it 'allows same name in different organizations' do
+      org1 = create(:organization)
+      org2 = create(:organization)
+      create(:tag, name: 'urgent', organization: org1)
+      tag = build(:tag, name: 'urgent', organization: org2)
+      expect(tag).to be_valid
     end
 
     it 'validates color format' do
@@ -38,6 +47,11 @@ RSpec.describe Tag, type: :model do
   end
 
   describe 'associations' do
+    it 'belongs to an organization' do
+      association = described_class.reflect_on_association(:organization)
+      expect(association.macro).to eq :belongs_to
+    end
+
     it 'has many task_tags' do
       association = described_class.reflect_on_association(:task_tags)
       expect(association.macro).to eq :has_many

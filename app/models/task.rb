@@ -1,11 +1,14 @@
 class Task < ApplicationRecord
+  # Organization association
+  belongs_to :organization, optional: true
+
   # Self-referential association for hierarchy
-  belongs_to :parent, class_name: 'Task', optional: true
-  has_many :children, class_name: 'Task', foreign_key: 'parent_id', dependent: :destroy
+  belongs_to :parent, class_name: "Task", optional: true
+  has_many :children, class_name: "Task", foreign_key: "parent_id", dependent: :destroy
 
   # User associations
-  belongs_to :assignee, class_name: 'User', optional: true
-  belongs_to :creator, class_name: 'User', optional: true
+  belongs_to :assignee, class_name: "User", optional: true
+  belongs_to :creator, class_name: "User", optional: true
 
   # Tags
   has_many :task_tags, dependent: :destroy

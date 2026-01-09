@@ -1,0 +1,33 @@
+<header class="border-b border-base-200 bg-base-100">
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <%= link_to "Covenant", root_path, class: "text-xl font-medium text-base-content hover:text-base-content" %>
+      <% if current_organization %>
+        <span class="text-base-content/40">/</span>
+        <span class="text-sm text-base-content/60"><%= current_organization.name %></span>
+      <% end %>
+    </div>
+    <div class="flex items-center gap-4">
+      <% if user_signed_in? %>
+        <div class="dropdown dropdown-end">
+          <div tabindex="0" role="button" class="flex items-center gap-2 cursor-pointer hover:bg-base-200 rounded-lg px-3 py-2 -mr-3">
+            <span class="text-sm text-base-content/70"><%= current_user.display_name %></span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+          <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200">
+            <li><%= link_to "Settings", settings_path %></li>
+            <% if current_organization && current_user.admin_of?(current_organization) %>
+              <li><%= link_to "Organization", organization_path %></li>
+            <% end %>
+            <div class="divider my-1"></div>
+            <li><%= link_to "Sign out", destroy_user_session_path, data: { turbo_method: :delete } %></li>
+          </ul>
+        </div>
+      <% else %>
+        <%= link_to "Sign in", new_user_session_path, class: "text-sm text-base-content/60 hover:text-base-content" %>
+      <% end %>
+    </div>
+  </div>
+</header>

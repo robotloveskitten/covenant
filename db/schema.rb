@@ -10,12 +10,48 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_09_025506) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_09_175224) do
+  create_table "invitations", force: :cascade do |t|
+    t.datetime "accepted_at"
+    t.datetime "created_at", null: false
+    t.string "email", null: false
+    t.integer "invited_by_id", null: false
+    t.integer "organization_id", null: false
+    t.string "role", default: "member", null: false
+    t.string "token", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invited_by_id"], name: "index_invitations_on_invited_by_id"
+    t.index ["organization_id", "email"], name: "index_invitations_on_organization_id_and_email", unique: true
+    t.index ["organization_id"], name: "index_invitations_on_organization_id"
+    t.index ["token"], name: "index_invitations_on_token", unique: true
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "organization_id", null: false
+    t.string "role", default: "member", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.index ["organization_id"], name: "index_memberships_on_organization_id"
+    t.index ["user_id", "organization_id"], name: "index_memberships_on_user_id_and_organization_id", unique: true
+    t.index ["user_id"], name: "index_memberships_on_user_id"
+  end
+
+  create_table "organizations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_organizations_on_slug", unique: true
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "color"
     t.datetime "created_at", null: false
     t.string "name"
+    t.integer "organization_id"
     t.datetime "updated_at", null: false
+    t.index ["organization_id"], name: "index_tags_on_organization_id"
   end
 
   create_table "task_dependencies", force: :cascade do |t|
@@ -57,6 +93,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_09_025506) do
     t.integer "creator_id"
     t.string "default_view", default: "document"
     t.date "due_date"
+    t.integer "organization_id"
     t.integer "parent_id"
     t.integer "position", default: 0
     t.string "status", default: "not_started"
@@ -65,6 +102,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_09_025506) do
     t.datetime "updated_at", null: false
     t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
     t.index ["creator_id"], name: "index_tasks_on_creator_id"
+    t.index ["organization_id"], name: "index_tasks_on_organization_id"
     t.index ["parent_id", "position"], name: "index_tasks_on_parent_id_and_position"
     t.index ["parent_id"], name: "index_tasks_on_parent_id"
     t.index ["status"], name: "index_tasks_on_status"
@@ -84,12 +122,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_09_025506) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "invitations", "organizations"
+  add_foreign_key "invitations", "users", column: "invited_by_id"
+  add_foreign_key "memberships", "organizations"
+  add_foreign_key "memberships", "users"
+  add_foreign_key "tags", "organizations"
   add_foreign_key "task_dependencies", "tasks"
   add_foreign_key "task_dependencies", "tasks", column: "dependency_id"
   add_foreign_key "task_tags", "tags"
   add_foreign_key "task_tags", "tasks"
   add_foreign_key "task_versions", "tasks"
   add_foreign_key "task_versions", "users"
+  add_foreign_key "tasks", "organizations"
   add_foreign_key "tasks", "tasks", column: "parent_id"
   add_foreign_key "tasks", "users", column: "assignee_id"
   add_foreign_key "tasks", "users", column: "creator_id"

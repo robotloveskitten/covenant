@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  # Mount Lookbook in development for ViewComponent previews
+  mount Lookbook::Engine, at: "/lookbook" if Rails.env.development?
+
   devise_for :users
 
   # User search for combobox

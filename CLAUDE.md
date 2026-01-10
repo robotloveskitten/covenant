@@ -8,14 +8,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 # Start development server (Rails + Tailwind + esbuild watchers)
 bin/dev
 
-# Run Rails tests
-bin/rails test
+# Run all RSpec tests
+bundle exec rspec
 
 # Run a single test file
-bin/rails test test/models/task_test.rb
+bundle exec rspec spec/models/task_spec.rb
 
 # Run a specific test by line number
-bin/rails test test/models/task_test.rb:10
+bundle exec rspec spec/models/task_spec.rb:10
 
 # Build JavaScript assets
 yarn build
@@ -33,6 +33,9 @@ bin/rails db:seed  # Creates demo user: demo@example.com / password123
 
 ## Architecture
 
+### Multi-Tenancy
+Users belong to Organizations through Memberships with roles (`admin`, `member`). Tasks and Tags are scoped to Organizations.
+
 ### Task Hierarchy
 The application uses a single `Task` model with self-referential associations to create a strict hierarchy:
 - **Strategy** → contains Initiatives
@@ -49,6 +52,9 @@ Each task can be viewed in two modes:
 
 The `default_view` field stores user preference per task.
 
+### ViewComponents
+UI components live in `app/components/` using ViewComponent. Lookbook provides previews at `/lookbook` in development (previews in `spec/components/previews/`).
+
 ### Stimulus Controllers
 - `tiptap_controller.js` - Wraps Tiptap editor, handles autosave (1s debounce) via PATCH to `/tasks/:id`
 - `kanban_controller.js` - Native HTML5 drag-and-drop, updates task status via API
@@ -63,3 +69,4 @@ The `default_view` field stores user preference per task.
 - Turbo/Hotwire for SPA-like navigation without full page reloads
 - JSON API responses in `TasksController#update` for JS autosave
 - DaisyUI component classes on Tailwind CSS 4
+- RSpec with FactoryBot for testing

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html data-theme="light">
+  <head>
+    <title>Component Preview</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+
+  <body class="bg-base-100 text-base-content">
+    <div class="p-8">
+      <%= yield %>
+    </div>
+  </body>
+</html>

@@ -37,10 +37,10 @@ RSpec.describe TaskTagsComponent, type: :component do
       expect(page).to have_css("[data-controller='tag-combobox']")
     end
 
-    it "shows 'Add tags...' placeholder when no tags" do
+    it "shows 'Type to search or create...' placeholder when no tags" do
       render_inline(described_class.new(task: task, editable: true))
 
-      expect(page).to have_text("Add tags...")
+      expect(page).to have_text("Type to search or create...")
     end
 
     it "shows existing tags in the combobox" do

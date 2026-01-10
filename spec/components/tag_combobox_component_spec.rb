@@ -34,7 +34,7 @@ RSpec.describe TagComboboxComponent, type: :component do
   it "shows placeholder when no tags selected" do
     render_inline(described_class.new(task: task))
 
-    expect(page).to have_text("Add tags...")
+    expect(page).to have_text("Type to search or create...")
   end
 
   it "renders selected tags" do

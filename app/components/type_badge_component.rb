@@ -3,9 +3,11 @@
 class TypeBadgeComponent < ViewComponent::Base
   TASK_TYPES = %w[strategy initiative epic task].freeze
 
-  def initialize(task_type:, variant: :badge)
+  def initialize(task_type:, variant: :badge, soft: false, outline: false)
     @task_type = task_type.to_s
     @variant = variant
+    @soft = soft
+    @outline = outline
   end
 
   private
@@ -20,8 +22,19 @@ class TypeBadgeComponent < ViewComponent::Base
     variant == :bar
   end
 
+  def soft?
+    @soft
+  end
+
+  def outline?
+    @outline
+  end
+
   def badge_classes
-    "badge badge-sm #{badge_color_class}"
+    classes = [ "badge", "badge-sm", badge_color_class ]
+    classes << "badge-soft" if soft?
+    classes << "badge-outline" if outline?
+    classes.join(" ")
   end
 
   def bar_classes

@@ -1,6 +1,6 @@
 class TaskDependency < ApplicationRecord
   belongs_to :task
-  belongs_to :dependency, class_name: 'Task'
+  belongs_to :dependency, class_name: "Task"
 
   validates :task_id, uniqueness: { scope: :dependency_id }
   validate :no_self_dependency

@@ -136,7 +136,7 @@ RSpec.describe Task, type: :model do
       grandparent = create(:task, :strategy)
       parent = create(:task, :initiative, parent: grandparent)
       child = create(:task, :epic, parent: parent)
-      expect(child.ancestors).to eq [grandparent, parent]
+      expect(child.ancestors).to eq [ grandparent, parent ]
     end
   end
 
@@ -150,7 +150,7 @@ RSpec.describe Task, type: :model do
       parent = create(:task, :epic)
       child1 = create(:task, parent: parent)
       child2 = create(:task, parent: parent)
-      expect(parent.descendants).to match_array([child1, child2])
+      expect(parent.descendants).to match_array([ child1, child2 ])
     end
   end
 

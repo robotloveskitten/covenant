@@ -1,7 +1,7 @@
 class VersionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_task
-  before_action :set_version, only: [:show, :restore]
+  before_action :set_version, only: [ :show, :restore ]
 
   def index
     @versions = @task.versions.ordered.includes(:user)

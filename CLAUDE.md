@@ -70,3 +70,12 @@ UI components live in `app/components/` using ViewComponent. Lookbook provides p
 - JSON API responses in `TasksController#update` for JS autosave
 - DaisyUI component classes on Tailwind CSS 4
 - RSpec with FactoryBot for testing
+
+## Development Guidelines
+
+This is an MVP. Prefer simple, clean, lean solutions over elaborate abstractions.
+
+- **Tests**: New code should include basic happy-path RSpec tests
+- **ViewComponents**: Use ViewComponents for UI elements where possible. Each component should have:
+  - A Lookbook preview in `spec/components/previews/`
+  - Basic RSpec tests in `spec/components/`

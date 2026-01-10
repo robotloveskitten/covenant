@@ -6,12 +6,7 @@
   </div>
 
   <!-- Assignee -->
-  <div class="flex items-center gap-2">
-    <% unless editable? %>
-      <span class="text-base-content/50">Assignee</span>
-    <% end %>
-    <%= render TaskAssigneeComponent.new(task: task, editable: editable?) %>
-  </div>
+  <%= render TaskAssigneeComponent.new(task: task, editable: editable?) %>
 
   <!-- Due date -->
   <% if has_due_date? %>

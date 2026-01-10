@@ -1,0 +1,19 @@
+<nav class="text-sm">
+  <ol class="flex items-center gap-1 text-base-content/50">
+    <li>
+      <%= link_to tasks_path, class: "hover:text-base-content" do %>
+        Home
+      <% end %>
+    </li>
+    <% ancestors.each do |ancestor| %>
+      <li class="flex items-center gap-1">
+        <span>/</span>
+        <%= link_to ancestor.title, task_path(ancestor), class: "hover:text-base-content truncate max-w-[150px]" %>
+      </li>
+    <% end %>
+    <li class="flex items-center gap-1">
+      <span>/</span>
+      <span class="text-base-content truncate max-w-[250px]"><%= task.title %></span>
+    </li>
+  </ol>
+</nav>

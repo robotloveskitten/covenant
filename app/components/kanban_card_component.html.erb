@@ -1,0 +1,23 @@
+<%= link_to task_path,
+    class: "kanban-card block bg-base-100 rounded-lg p-3 shadow-sm hover:shadow transition-shadow cursor-pointer",
+    data: card_data_attributes do %>
+  <div class="flex items-start gap-2">
+    <div class="self-stretch">
+      <%= render TypeBadgeComponent.new(task_type: task.task_type, variant: :bar) %>
+    </div>
+    <div class="flex-1 min-w-0">
+      <p class="text-sm font-medium text-base-content truncate"><%= task.title %></p>
+      <div class="flex items-center gap-2 mt-2">
+        <span class="text-xs text-base-content/40 uppercase"><%= task.task_type %></span>
+        <% if has_due_date? %>
+          <span class="text-xs text-base-content/50"><%= formatted_due_date %></span>
+        <% end %>
+      </div>
+      <% if has_assignee? %>
+        <div class="mt-2">
+          <span class="text-xs text-base-content/50"><%= task.assignee.display_name %></span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

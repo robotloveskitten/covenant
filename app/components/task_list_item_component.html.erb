@@ -1,0 +1,30 @@
+<%= link_to task_path, class: "block group" do %>
+  <div class="flex items-center gap-4 px-4 py-3 rounded-lg hover:bg-base-200/50 transition-colors">
+    <!-- Type indicator bar -->
+    <div class="h-8 self-stretch">
+      <%= render TypeBadgeComponent.new(task_type: task.task_type, variant: :bar) %>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2">
+        <span class="font-medium text-base-content truncate"><%= task.title %></span>
+        <span class="text-xs text-base-content/40 uppercase"><%= task.task_type %></span>
+      </div>
+      <% if has_children? %>
+        <span class="text-xs text-base-content/50"><%= children_count %> items</span>
+      <% end %>
+    </div>
+
+    <!-- Status and metadata -->
+    <div class="flex items-center gap-3">
+      <%= render StatusBadgeComponent.new(status: task.status) %>
+      <% if has_assignee? %>
+        <span class="text-xs text-base-content/50"><%= task.assignee.display_name %></span>
+      <% end %>
+      <% if has_due_date? %>
+        <span class="text-xs text-base-content/50"><%= formatted_due_date %></span>
+      <% end %>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,17 @@
+<% if editable? %>
+  <%= render AssigneeComboboxComponent.new(task: task) %>
+<% else %>
+  <div class="flex items-center gap-2">
+    <span class="text-base-content/50">Assignee</span>
+    <% if has_assignee? %>
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 shrink-0 rounded-full bg-base-300 flex items-center justify-center text-xs font-medium">
+          <%= assignee_initial %>
+        </div>
+        <span class="text-sm"><%= assignee.display_name %></span>
+      </div>
+    <% else %>
+      <span class="text-base-content/40">Unassigned</span>
+    <% end %>
+  </div>
+<% end %>

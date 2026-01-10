@@ -19,6 +19,6 @@ class TiptapEditorComponent < ViewComponent::Base
   end
 
   def sanitized_content
-    helpers.sanitize(task.content)
+    helpers.sanitize_tiptap_content(task.content)
   end
 end

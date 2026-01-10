@@ -38,7 +38,7 @@ class TypeBadgeComponent < ViewComponent::Base
   end
 
   def bar_classes
-    "w-1 rounded-full #{bar_color_class}"
+    "w-1 h-full rounded-full #{bar_color_class}"
   end
 
   def badge_color_class

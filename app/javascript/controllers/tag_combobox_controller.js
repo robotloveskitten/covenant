@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "dropdown", "list", "selectedContainer", "hiddenInputs", "editPopover"]
+  static targets = ["input", "dropdown", "list", "selectedContainer", "hiddenInputs"]
   static values = {
     url: String,
     createUrl: String,
@@ -16,6 +16,7 @@ export default class extends Controller {
     this.results = []
     this.highlightedIndex = -1
     this.editingTag = null
+    this.currentEditPopover = null
 
     this.clickOutsideHandler = (e) => {
       if (!this.element.contains(e.target)) {
@@ -178,13 +179,18 @@ export default class extends Controller {
 
     if (!tag) return
 
-    this.editingTag = tag
     this.renderEditPopover(tag, tagElement)
   }
 
   renderEditPopover(tag, anchor) {
-    // Remove any existing popover
-    this.closeEditPopover()
+    // Remove any existing popover (but don't reset editingTag yet)
+    if (this.currentEditPopover) {
+      this.currentEditPopover.remove()
+      this.currentEditPopover = null
+    }
+
+    // Set the editing tag
+    this.editingTag = tag
 
     const rect = anchor.getBoundingClientRect()
     const containerRect = this.element.getBoundingClientRect()
@@ -193,8 +199,6 @@ export default class extends Controller {
     popover.className = 'absolute bg-base-100 border border-base-200 rounded-lg shadow-lg z-50 p-3 w-64'
     popover.style.left = `${rect.left - containerRect.left}px`
     popover.style.top = `${rect.bottom - containerRect.top + 4}px`
-    popover.dataset.tagComboboxTarget = 'editPopover'
-
     popover.innerHTML = `
       <div class="space-y-3">
         <div>
@@ -206,27 +210,17 @@ export default class extends Controller {
         </div>
         <div>
           <label class="text-xs text-base-content/50 block mb-1">Color</label>
-          <div class="flex gap-1 flex-wrap">
-            ${this.colorsValue.map(color => `
-              <button type="button"
-                      class="w-6 h-6 rounded-full border-2 ${color === tag.color ? 'border-base-content' : 'border-transparent'} hover:scale-110 transition-transform"
-                      style="background-color: ${color}"
-                      data-action="click->tag-combobox#selectColor"
-                      data-color="${color}">
-              </button>
-            `).join('')}
-          </div>
+          <div class="flex gap-1 flex-wrap" data-color-buttons></div>
         </div>
         <div class="flex gap-2 pt-2 border-t border-base-200">
           <button type="button"
                   class="btn btn-sm btn-primary flex-1"
-                  data-action="click->tag-combobox#saveTagEdit">
+                  data-save-btn>
             Save
           </button>
           <button type="button"
                   class="btn btn-sm btn-ghost btn-error"
-                  data-action="click->tag-combobox#deleteTag"
-                  data-id="${tag.id}">
+                  data-delete-btn>
             Delete
           </button>
         </div>
@@ -234,30 +228,57 @@ export default class extends Controller {
     `
 
     this.element.appendChild(popover)
+    this.currentEditPopover = popover
 
     // Store selected color for editing
     this.editingColor = tag.color
+
+    // Add color buttons with click handlers
+    const colorContainer = popover.querySelector('[data-color-buttons]')
+    this.colorsValue.forEach(color => {
+      const btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = `w-6 h-6 rounded-full border-2 ${color === tag.color ? 'border-base-content' : 'border-transparent'} hover:scale-110 transition-transform`
+      btn.style.backgroundColor = color
+      btn.dataset.color = color
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation()
+        this.handleColorSelect(color)
+      })
+      colorContainer.appendChild(btn)
+    })
+
+    // Add save button handler
+    popover.querySelector('[data-save-btn]').addEventListener('click', (e) => {
+      e.stopPropagation()
+      this.saveTagEdit()
+    })
+
+    // Add delete button handler
+    popover.querySelector('[data-delete-btn]').addEventListener('click', (e) => {
+      e.stopPropagation()
+      this.handleDeleteTag(tag.id)
+    })
 
     // Focus the name input
     popover.querySelector('[data-edit-name]').focus()
   }
 
   closeEditPopover() {
-    if (this.hasEditPopoverTarget) {
-      this.editPopoverTarget.remove()
+    if (this.currentEditPopover) {
+      this.currentEditPopover.remove()
+      this.currentEditPopover = null
     }
     this.editingTag = null
     this.editingColor = null
   }
 
-  selectColor(event) {
-    event.stopPropagation()
-    const color = event.currentTarget.dataset.color
+  handleColorSelect(color) {
     this.editingColor = color
 
     // Update visual selection
-    if (this.hasEditPopoverTarget) {
-      this.editPopoverTarget.querySelectorAll('[data-color]').forEach(btn => {
+    if (this.currentEditPopover) {
+      this.currentEditPopover.querySelectorAll('[data-color]').forEach(btn => {
         if (btn.dataset.color === color) {
           btn.classList.add('border-base-content')
           btn.classList.remove('border-transparent')
@@ -270,9 +291,9 @@ export default class extends Controller {
   }
 
   async saveTagEdit() {
-    if (!this.editingTag) return
+    if (!this.editingTag || !this.currentEditPopover) return
 
-    const nameInput = this.editPopoverTarget.querySelector('[data-edit-name]')
+    const nameInput = this.currentEditPopover.querySelector('[data-edit-name]')
     const newName = nameInput.value.trim()
     const newColor = this.editingColor
 
@@ -308,9 +329,7 @@ export default class extends Controller {
     }
   }
 
-  async deleteTag(event) {
-    const id = parseInt(event.currentTarget.dataset.id)
-
+  async handleDeleteTag(id) {
     try {
       const response = await fetch(`/tags/${id}`, {
         method: "DELETE",
@@ -385,9 +404,7 @@ export default class extends Controller {
 
   renderSelected() {
     if (this.selectedValue.length === 0) {
-      this.selectedContainerTarget.innerHTML = `
-        <span class="text-sm text-base-content/40">${this.placeholderValue}</span>
-      `
+      this.selectedContainerTarget.innerHTML = ''
       return
     }
 

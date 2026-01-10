@@ -1,0 +1,66 @@
+<%# Multi-select tag combobox with inline create/edit %>
+<div data-controller="tag-combobox"
+     data-tag-combobox-url-value="<%= tags_search_path %>"
+     data-tag-combobox-create-url-value="<%= tags_path %>"
+     data-tag-combobox-task-url-value="<%= task_path %>"
+     data-tag-combobox-selected-value="<%= selected_tags_json %>"
+     data-tag-combobox-colors-value="<%= colors_json %>"
+     data-tag-combobox-placeholder-value="Add tags..."
+     class="relative">
+
+  <%# Hidden inputs container for form submission %>
+  <div data-tag-combobox-target="hiddenInputs">
+    <% task.tags.each do |tag| %>
+      <input type="hidden" name="task[tag_ids][]" value="<%= tag.id %>">
+    <% end %>
+    <%# Empty value to allow clearing all tags %>
+    <input type="hidden" name="task[tag_ids][]" value="">
+  </div>
+
+  <%# Selected tags display + trigger %>
+  <div class="flex items-center gap-2 min-h-[28px] cursor-pointer px-1 py-1 pr-8 rounded hover:bg-base-200 transition-colors"
+       data-action="click->tag-combobox#toggle">
+
+    <%# Label %>
+    <span class="text-base-content/50">Tags</span>
+
+    <%# Selected tags badges %>
+    <div data-tag-combobox-target="selectedContainer" class="flex flex-wrap gap-1">
+      <% task.tags.each do |tag| %>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs cursor-pointer hover:opacity-80"
+              style="background-color: <%= tag.color %>20; color: <%= tag.color %>"
+              data-action="click->tag-combobox#openEditPopover"
+              data-tag-id="<%= tag.id %>">
+          <%= tag.name %>
+          <button type="button"
+                  class="hover:opacity-60"
+                  data-action="click->tag-combobox#removeTag"
+                  data-id="<%= tag.id %>">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </span>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Dropdown %>
+  <div data-tag-combobox-target="dropdown"
+       class="hidden absolute top-full left-0 mt-1 w-64 bg-base-100 border border-base-200 rounded-lg shadow-lg z-50">
+
+    <%# Search input %>
+    <div class="p-2 border-b border-base-200">
+      <input type="text"
+             data-tag-combobox-target="input"
+             data-action="input->tag-combobox#search keydown->tag-combobox#onKeydown"
+             placeholder="Search or create tag..."
+             class="input input-sm input-bordered w-full">
+    </div>
+
+    <%# Results list %>
+    <div data-tag-combobox-target="list" class="max-h-48 overflow-y-auto">
+      <div class="px-3 py-2 text-sm text-base-content/50">Type to search or create...</div>
+    </div>
+  </div>
+</div>

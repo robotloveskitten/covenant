@@ -1,11 +1,12 @@
 class TagsController < ApplicationController
   before_action :authenticate_user!
+  before_action :require_organization_for_tags
   before_action :set_tag, only: [:update, :destroy]
 
   def search
     query = params[:q].to_s.strip
 
-    tags = organization_tags
+    tags = current_organization.tags
     tags = tags.where("name LIKE ?", "%#{query}%") if query.present?
     tags = tags.order(:name).limit(20)
 
@@ -13,7 +14,7 @@ class TagsController < ApplicationController
   end
 
   def create
-    tag = organization_tags.new(tag_params)
+    tag = current_organization.tags.new(tag_params)
 
     if tag.save
       render json: { id: tag.id, name: tag.name, color: tag.color }, status: :created
@@ -41,16 +42,14 @@ class TagsController < ApplicationController
 
   private
 
-  def set_tag
-    @tag = organization_tags.find(params[:id])
+  def require_organization_for_tags
+    unless current_organization
+      render json: { errors: ["No organization found"] }, status: :unprocessable_entity
+    end
   end
 
-  def organization_tags
-    if current_organization
-      current_organization.tags
-    else
-      Tag.none
-    end
+  def set_tag
+    @tag = current_organization.tags.find(params[:id])
   end
 
   def tag_params

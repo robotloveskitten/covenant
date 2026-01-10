@@ -1,0 +1,18 @@
+<% if editable? %>
+  <%= render TagComboboxComponent.new(task: task) %>
+<% else %>
+  <div class="flex items-center gap-2">
+    <span class="text-base-content/50">Tags</span>
+    <% if has_tags? %>
+      <div class="flex flex-wrap gap-1">
+        <% tags.each do |tag| %>
+          <span class="badge badge-sm" style="background-color: <%= tag.color %>20; color: <%= tag.color %>">
+            <%= tag.name %>
+          </span>
+        <% end %>
+      </div>
+    <% else %>
+      <span class="text-base-content/40">No tags</span>
+    <% end %>
+  </div>
+<% end %>

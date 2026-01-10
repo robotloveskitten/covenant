@@ -43,9 +43,10 @@ class TagsController < ApplicationController
   private
 
   def require_organization_for_tags
-    unless current_organization
-      render json: { errors: ["No organization found"] }, status: :unprocessable_entity
-    end
+    return if current_organization
+
+    render json: { errors: ["No organization found"] }, status: :unprocessable_entity
+    throw :abort
   end
 
   def set_tag

@@ -47,33 +47,7 @@
           <%= render TaskMetadataComponent.new(task: @task, editable: user_signed_in?) %>
 
           <!-- Content -->
-          <div class="overflow-hidden" data-controller="tiptap" data-tiptap-editable-value="<%= user_signed_in? %>" data-tiptap-task-id-value="<%= @task.id %>">
-            <% if user_signed_in? %>
-              <!-- Bubble Menu (floating toolbar on text selection) -->
-              <div data-tiptap-target="bubbleMenu" class="bubble-menu">
-                <div class="flex items-center gap-0.5 p-1 bg-base-100 border border-base-200 rounded-lg shadow-lg">
-                  <button type="button" class="btn btn-xs btn-ghost font-bold" data-action="click->tiptap#toggleBold" title="Bold">B</button>
-                  <button type="button" class="btn btn-xs btn-ghost italic" data-action="click->tiptap#toggleItalic" title="Italic">I</button>
-                  <button type="button" class="btn btn-xs btn-ghost underline" data-action="click->tiptap#toggleUnderline" title="Underline">U</button>
-                  <button type="button" class="btn btn-xs btn-ghost line-through" data-action="click->tiptap#toggleStrike" title="Strikethrough">S</button>
-                  <div class="divider divider-horizontal mx-0.5 h-4"></div>
-                  <button type="button" class="btn btn-xs btn-ghost" data-action="click->tiptap#setLink" title="Add link">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                  </button>
-                  <button type="button" class="btn btn-xs btn-ghost" data-action="click->tiptap#toggleHighlight" data-color="#fef08a" title="Highlight">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
-                  </button>
-                </div>
-              </div>
-            <% end %>
-            <div data-tiptap-target="editor" class="prose prose-sm max-w-none min-h-[200px] focus:outline-none">
-              <% if @task.content.present? %>
-                <%= sanitize @task.content %>
-              <% else %>
-                <p class="text-base-content/40">Click to add content...</p>
-              <% end %>
-            </div>
-          </div>
+          <%= render TiptapEditorComponent.new(task: @task, editable: user_signed_in?) %>
 
           <!-- Children list -->
           <% if @children.any? %>

@@ -1,0 +1,10 @@
+{
+  "ignored_warnings": [
+    {
+      "fingerprint": "d60ce8e73b3878b41e8bd252114027cd08b1a07beb24b3fb0760e1c5f5be4f05",
+      "note": "Role is validated in model to only allow 'admin' or 'member', and only admins can create invitations (require_admin before_action)"
+    }
+  ],
+  "updated": "2026-01-10",
+  "brakeman_version": "7.0.0"
+}

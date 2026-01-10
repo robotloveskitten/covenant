@@ -94,7 +94,7 @@
             <% end %>
             <div data-tiptap-target="editor" class="prose prose-sm max-w-none min-h-[200px] focus:outline-none">
               <% if @task.content.present? %>
-                <%= raw @task.content %>
+                <%= sanitize @task.content %>
               <% else %>
                 <p class="text-base-content/40">Click to add content...</p>
               <% end %>

@@ -80,7 +80,7 @@ RSpec.describe TaskVersion, type: :model do
         v3 = create(:task_version, task: task, version_number: 3)
         v2 = create(:task_version, task: task, version_number: 2)
 
-        expect(TaskVersion.ordered.to_a).to eq [v3, v2, v1]
+        expect(TaskVersion.ordered.to_a).to eq [ v3, v2, v1 ]
       end
     end
   end

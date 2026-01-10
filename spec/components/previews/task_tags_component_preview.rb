@@ -51,7 +51,7 @@ class TaskTagsComponentPreview < ViewComponent::Preview
       tag1 = find_or_create_tag(org, "Bug", "#ef4444")
       tag2 = find_or_create_tag(org, "Feature", "#22c55e")
       tag3 = find_or_create_tag(org, "Urgent", "#f97316")
-      task.tags = [tag1, tag2, tag3]
+      task.tags = [ tag1, tag2, tag3 ]
     end
 
     task

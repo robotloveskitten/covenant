@@ -1,0 +1,31 @@
+<div data-controller="kanban" data-kanban-task-id-value="<%= task.id %>">
+  <div class="flex items-center justify-between mb-6">
+    <h3 class="text-lg font-medium text-base-content">Kanban Board</h3>
+    <% if can_add_children? %>
+      <%= link_to new_task_path, class: "btn btn-sm btn-ghost" do %>
+        + Add Item
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="flex gap-4 overflow-x-auto pb-4">
+    <% STATUSES.each do |status| %>
+      <div class="kanban-column flex-shrink-0 w-72 bg-base-200/30 rounded-lg p-3"
+           data-kanban-target="column"
+           data-status="<%= status %>">
+        <div class="flex items-center justify-between mb-3">
+          <h4 class="text-sm font-medium text-base-content/70"><%= status_label(status) %></h4>
+          <span class="text-xs text-base-content/40"><%= children_count_by_status(status) %></span>
+        </div>
+
+        <div class="space-y-2 min-h-[100px]"
+             data-kanban-target="list"
+             data-status="<%= status %>">
+          <% children_by_status(status).each do |child| %>
+            <%= render KanbanCardComponent.new(task: child) %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

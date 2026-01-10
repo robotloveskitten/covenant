@@ -1,0 +1,21 @@
+<div class="flex flex-col flex-wrap gap-2 mb-6 text-sm" data-controller="task-field" data-task-field-url-value="<%= task_path %>">
+  <!-- Status -->
+  <div class="flex items-center gap-2">
+    <span class="text-base-content/50">Status</span>
+    <%= render StatusBadgeComponent.new(status: task.status) %>
+  </div>
+
+  <!-- Assignee -->
+  <%= render TaskAssigneeComponent.new(task: task, editable: editable?) %>
+
+  <!-- Due date -->
+  <% if has_due_date? %>
+    <div class="flex items-center gap-2">
+      <span class="text-base-content/50">Due</span>
+      <span class="text-base-content"><%= formatted_due_date %></span>
+    </div>
+  <% end %>
+
+  <!-- Tags -->
+  <%= render TaskTagsComponent.new(task: task, editable: editable?) %>
+</div>

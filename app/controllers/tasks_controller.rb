@@ -1,6 +1,6 @@
 class TasksController < ApplicationController
-  before_action :authenticate_user!, except: [:index, :show, :kanban]
-  before_action :set_task, only: [:show, :edit, :update, :destroy, :kanban, :reorder_children]
+  before_action :authenticate_user!, except: [ :index, :show, :kanban ]
+  before_action :set_task, only: [ :show, :edit, :update, :destroy, :kanban, :reorder_children ]
 
   def index
     @tasks = organization_tasks.root_tasks.ordered.includes(:assignee, :tags, :children)
@@ -38,7 +38,7 @@ class TasksController < ApplicationController
   def update
     if @task.update(task_params)
       respond_to do |format|
-        format.html { redirect_to @task, notice: 'Task was successfully updated.' }
+        format.html { redirect_to @task, notice: "Task was successfully updated." }
         format.json { render json: { success: true } }
         format.turbo_stream
       end
@@ -54,7 +54,7 @@ class TasksController < ApplicationController
     parent = @task.parent
     @task.destroy
 
-    redirect_to parent || tasks_path, notice: 'Task was successfully deleted.'
+    redirect_to parent || tasks_path, notice: "Task was successfully deleted."
   end
 
   def reorder_children

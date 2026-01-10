@@ -1,7 +1,7 @@
 class InvitationsController < ApplicationController
-  before_action :authenticate_user!, except: [:accept]
-  before_action :require_organization, except: [:accept]
-  before_action :require_admin, except: [:accept]
+  before_action :authenticate_user!, except: [ :accept ]
+  before_action :require_organization, except: [ :accept ]
+  before_action :require_admin, except: [ :accept ]
 
   # GET /organization/invitations
   def index

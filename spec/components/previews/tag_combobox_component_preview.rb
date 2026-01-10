@@ -34,7 +34,7 @@ class TagComboboxComponentPreview < ViewComponent::Preview
     if task.tags.empty?
       tag1 = find_or_create_tag(org, "Bug", "#ef4444")
       tag2 = find_or_create_tag(org, "Feature", "#22c55e")
-      task.tags = [tag1, tag2]
+      task.tags = [ tag1, tag2 ]
     end
 
     task

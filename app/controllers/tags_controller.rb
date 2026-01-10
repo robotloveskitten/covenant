@@ -1,7 +1,7 @@
 class TagsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_organization_for_tags
-  before_action :set_tag, only: [:update, :destroy]
+  before_action :set_tag, only: [ :update, :destroy ]
 
   def search
     query = params[:q].to_s.strip
@@ -45,7 +45,7 @@ class TagsController < ApplicationController
   def require_organization_for_tags
     return if current_organization
 
-    render json: { errors: ["No organization found"] }, status: :unprocessable_entity
+    render json: { errors: [ "No organization found" ] }, status: :unprocessable_entity
     throw :abort
   end
 

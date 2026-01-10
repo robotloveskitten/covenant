@@ -8,11 +8,11 @@ Rails.application.routes.draw do
   }
 
   # User settings
-  resource :settings, only: [:show, :update]
+  resource :settings, only: [ :show, :update ]
 
   # Organization management (admin)
-  resource :organization, only: [:show, :update] do
-    resources :invitations, only: [:index, :create, :destroy]
+  resource :organization, only: [ :show, :update ] do
+    resources :invitations, only: [ :index, :create, :destroy ]
   end
 
   # Public invitation acceptance
@@ -23,7 +23,7 @@ Rails.application.routes.draw do
 
   # Tag routes for combobox
   get "tags/search", to: "tags#search", as: :tags_search
-  resources :tags, only: [:create, :update, :destroy]
+  resources :tags, only: [ :create, :update, :destroy ]
 
   # Task routes
   resources :tasks do
@@ -31,7 +31,7 @@ Rails.application.routes.draw do
       get :kanban
       post :reorder_children
     end
-    resources :versions, only: [:index, :show] do
+    resources :versions, only: [ :index, :show ] do
       member do
         post :restore
       end

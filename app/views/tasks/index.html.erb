@@ -18,7 +18,7 @@
     <% if @tasks.any? %>
       <div class="space-y-1">
         <% @tasks.each do |task| %>
-          <%= render partial: 'task_list_item', locals: { task: task } %>
+          <%= render TaskListItemComponent.new(task: task) %>
         <% end %>
       </div>
     <% else %>

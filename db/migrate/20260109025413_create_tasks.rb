@@ -15,7 +15,7 @@ class CreateTasks < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :tasks, [:parent_id, :position]
+    add_index :tasks, [ :parent_id, :position ]
     add_index :tasks, :task_type
     add_index :tasks, :status
   end

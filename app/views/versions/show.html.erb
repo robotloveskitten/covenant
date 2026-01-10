@@ -38,7 +38,7 @@
       
       <% if @version.content.present? %>
         <div class="prose prose-sm max-w-none">
-          <%= raw @version.content %>
+          <%= sanitize_tiptap_content @version.content %>
         </div>
       <% else %>
         <p class="text-base-content/50 italic">No content</p>

@@ -2,11 +2,11 @@
   <!-- Header -->
   <header class="border-b border-base-200 bg-base-100 sticky top-0 z-10">
     <div class="max-w-6xl mx-auto px-6 py-3">
-      <%= render partial: 'breadcrumb', locals: { task: @task } %>
+      <%= render BreadcrumbComponent.new(task: @task) %>
       
       <div class="flex items-center justify-between mt-2">
         <div class="flex items-center gap-3">
-          <span class="badge badge-sm badge-outline <%= task_type_color(@task.task_type) %>"><%= @task.task_type.capitalize %></span>
+          <%= render TypeBadgeComponent.new(task_type: @task.task_type, outline: true) %>
           <h1 class="text-xl font-semibold text-base-content"><%= @task.title %></h1>
         </div>
         
@@ -20,6 +20,6 @@
   </header>
 
   <main class="max-w-6xl mx-auto px-6 py-6">
-    <%= render partial: 'kanban_board', locals: { task: @task, children: @children } %>
+    <%= render KanbanBoardComponent.new(task: @task, children: @children) %>
   </main>
 </div>

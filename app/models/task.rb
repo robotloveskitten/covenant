@@ -17,11 +17,11 @@ class Task < ApplicationRecord
   # Dependencies
   has_many :task_dependencies, dependent: :destroy
   has_many :dependencies, through: :task_dependencies, source: :dependency
-  has_many :dependent_tasks, class_name: 'TaskDependency', foreign_key: 'dependency_id', dependent: :destroy
+  has_many :dependent_tasks, class_name: "TaskDependency", foreign_key: "dependency_id", dependent: :destroy
   has_many :dependents, through: :dependent_tasks, source: :task
 
   # Version history
-  has_many :versions, class_name: 'TaskVersion', dependent: :destroy
+  has_many :versions, class_name: "TaskVersion", dependent: :destroy
 
   # Validations
   validates :title, presence: true
@@ -41,17 +41,17 @@ class Task < ApplicationRecord
   VIEWS = %w[document kanban].freeze
 
   STATUS_LABELS = {
-    'not_started' => 'Not Started',
-    'in_progress' => 'In Progress',
-    'completed' => 'Completed',
-    'blocked' => 'Blocked'
+    "not_started" => "Not Started",
+    "in_progress" => "In Progress",
+    "completed" => "Completed",
+    "blocked" => "Blocked"
   }.freeze
 
   TYPE_LABELS = {
-    'strategy' => 'Strategy',
-    'initiative' => 'Initiative',
-    'epic' => 'Epic',
-    'task' => 'Task'
+    "strategy" => "Strategy",
+    "initiative" => "Initiative",
+    "epic" => "Epic",
+    "task" => "Task"
   }.freeze
 
   # Callbacks
@@ -70,16 +70,16 @@ class Task < ApplicationRecord
 
   # Get all descendants
   def descendants
-    children.flat_map { |child| [child] + child.descendants }
+    children.flat_map { |child| [ child ] + child.descendants }
   end
 
   # Check if this task can have children of a given type
   def allowed_child_types
     case task_type
-    when 'strategy' then %w[initiative]
-    when 'initiative' then %w[epic]
-    when 'epic' then %w[task]
-    when 'task' then []
+    when "strategy" then %w[initiative]
+    when "initiative" then %w[epic]
+    when "epic" then %w[task]
+    when "task" then []
     else TASK_TYPES
     end
   end

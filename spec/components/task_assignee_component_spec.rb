@@ -43,10 +43,9 @@ RSpec.describe TaskAssigneeComponent, type: :component do
       expect(page).to have_css("[data-controller='combobox']")
     end
 
-    it "does not render static label" do
+    it "renders the label" do
       render_inline(described_class.new(task: task, editable: true))
-      # In editable mode, the combobox handles the display
-      expect(page).not_to have_css("span", text: "Assignee")
+      expect(page).to have_text("Assignee")
     end
   end
 

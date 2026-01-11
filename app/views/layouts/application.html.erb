@@ -20,6 +20,8 @@
   </head>
 
   <body class="min-h-screen bg-base-100 text-base-content">
+    <%= render AppHeaderComponent.new(task: @task) %>
+
     <% if notice %>
       <div class="toast toast-top toast-end z-50">
         <div class="alert alert-success alert-soft text-sm"><%= notice %></div>
@@ -30,7 +32,7 @@
         <div class="alert alert-error alert-soft text-sm"><%= alert %></div>
       </div>
     <% end %>
-    
+
     <%= yield %>
   </body>
 </html>

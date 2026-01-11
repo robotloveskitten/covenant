@@ -1,5 +1,5 @@
 ---
-description: Implement a complete feature using the full agent team
+description: Implement a complete feature using the full agent team, sometimes called the A-team
 argument-hint: "<feature description>"
 ---
 

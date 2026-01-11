@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html data-theme="light">
+  <head>
+    <title>Table of Contents Preview</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
+  </head>
+
+  <body class="bg-base-100 text-base-content">
+    <div class="p-8 relative min-h-screen">
+      <div class="preview-content tiptap-editor prose max-w-3xl">
+        <h1>User Testing Template</h1>
+        <p>This is a sample document to demonstrate the table of contents component. Scroll down to see the ToC update as you navigate through the sections.</p>
+
+        <h2>Goals</h2>
+        <p>Define clear objectives for the user testing session. What do you want to learn? What assumptions are you validating?</p>
+        <ul>
+          <li>Understand user behavior patterns</li>
+          <li>Identify usability issues</li>
+          <li>Validate design decisions</li>
+        </ul>
+
+        <h2>Questions</h2>
+        <p>Key questions to explore during the testing session.</p>
+
+        <h3>Sprint Questions</h3>
+        <p>Questions related to the overall sprint goals and product direction.</p>
+        <ul>
+          <li>What is the user's mental model?</li>
+          <li>How do users expect the feature to work?</li>
+          <li>What are the main pain points?</li>
+        </ul>
+
+        <h3>Prototype Questions</h3>
+        <p>Specific questions about the prototype or design implementation.</p>
+        <ul>
+          <li>Is the interface intuitive?</li>
+          <li>Can users complete the core tasks?</li>
+          <li>Where do users get stuck?</li>
+        </ul>
+
+        <h2>Method</h2>
+        <p>Describe the testing methodology: remote vs in-person, moderated vs unmoderated, think-aloud protocol, etc.</p>
+
+        <h2>Participants</h2>
+        <p>Detail your participant criteria and recruitment strategy.</p>
+        <ul>
+          <li>Target audience demographics</li>
+          <li>Sample size</li>
+          <li>Screening criteria</li>
+        </ul>
+
+        <h2>Observations</h2>
+        <p>Record key observations during the testing sessions. Look for patterns across multiple participants.</p>
+
+        <h2>Results</h2>
+        <p>Summarize the findings from the testing sessions. Use data and specific examples.</p>
+
+        <h2>Findings</h2>
+        <p>Key takeaways and actionable insights from the user testing.</p>
+        <ol>
+          <li>Primary finding and recommendation</li>
+          <li>Secondary finding and recommendation</li>
+          <li>Additional insights</li>
+        </ol>
+
+        <h2>Next Steps</h2>
+        <p>Define clear action items based on the findings.</p>
+      </div>
+    </div>
+
+    <%= yield %>
+  </body>
+</html>

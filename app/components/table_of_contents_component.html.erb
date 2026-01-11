@@ -1,0 +1,23 @@
+<div
+  data-controller="toc"
+  data-toc-container-value="<%= container_selector %>"
+  class="toc fixed right-4 top-24 z-10 transition-all duration-200 ease-in-out"
+>
+  <!-- Entries list (shown on hover/expanded) -->
+  <ul
+    data-toc-target="entries"
+    class="toc-entries hidden space-y-1 bg-base-100 border border-base-300 rounded-lg p-2 shadow-lg min-w-[200px] max-w-[300px] max-h-[70vh] overflow-y-auto"
+    role="navigation"
+  >
+    <!-- Populated dynamically by Stimulus controller -->
+  </ul>
+
+  <!-- Abstract entries (bars shown when collapsed) -->
+  <ul
+    data-toc-target="abstract"
+    class="toc-abstract space-y-2 bg-base-100 border border-base-300 rounded-lg p-2 shadow-lg w-12"
+    aria-hidden="true"
+  >
+    <!-- Populated dynamically by Stimulus controller -->
+  </ul>
+</div>

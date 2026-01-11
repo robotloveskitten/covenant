@@ -16,6 +16,7 @@ import AutosaveController from "./autosave_controller"
 import ComboboxController from "./combobox_controller"
 import TaskFieldController from "./task_field_controller"
 import TagComboboxController from "./tag_combobox_controller"
+import TocController from "./toc_controller"
 
 // Register controllers
 application.register("hello", HelloController)
@@ -26,5 +27,6 @@ application.register("autosave", AutosaveController)
 application.register("combobox", ComboboxController)
 application.register("task-field", TaskFieldController)
 application.register("tag-combobox", TagComboboxController)
+application.register("toc", TocController)
 
 export { application }

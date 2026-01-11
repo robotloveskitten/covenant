@@ -2,7 +2,10 @@
   <div class="max-w-6xl mx-auto px-6 py-4">
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <%= link_to "Covenant", root_path, class: "text-xl font-medium text-base-content hover:text-base-content" %>
+        <%= link_to root_path, class: "flex items-center gap-2 text-xl font-medium text-base-content hover:text-base-content" do %>
+          <img src="/covenant-logo-1.svg" alt="Covenant" class="h-6 w-6">
+          Covenant
+        <% end %>
         <% if current_organization %>
           <span class="text-base-content/40">/</span>
           <span class="text-sm text-base-content/60"><%= current_organization.name %></span>
